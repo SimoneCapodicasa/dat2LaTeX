@@ -12,9 +12,11 @@
 ####################################################################
 
 SCRIPT=(basename $0)
-HELP="
+
+function Usage {
+echo -e "
 \033[1m\tdat2LaTeX:\ta cloven script by Simone Capodicasa\n
-\thomepage:\thttp://newton.ph.unito.it/~capodica\n
+\thomepage:\tsimonecapodicasa.github.io\n
 \temail:\t\tcapodica@studenti.ph.unito.it\n
 \tlatest update:\t2014/03/11\n\n\033[0m
 \033[1mUSAGE:\033[0m\n
@@ -26,14 +28,16 @@ HELP="
 \t-s\n\t\t\tinsert an horizontal line between rows.\n
 \t-v \033[4mstyle\033[0m\n\t\t\tvertical style (e.g. '{c|c|c}').\n
 \t-t \033[4mtitle\033[0m\n\t\t\tthe caption of your table.\n
-\t-f \033[4m\"first line\"\033[0m\n\t\t\tthe first line of your table, e.g. the description of your columns (space-separated, quotes are mandatory)\n
+\t-f \033[4m\"first line\"\033[0m\n\t\t\tthe first line of your table, e.g. the description of your columns (space-separated, quotes are mandatory)\n"
 
-"
+exit 0
+}
+
 #stampo l'help se lo script è senza argomenti
 if [ $# -eq 0 ] 
 then
     echo
-    echo -e $HELP
+    Usage
     exit 1
 fi
 #setto i default
