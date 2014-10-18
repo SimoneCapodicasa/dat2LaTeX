@@ -3,7 +3,7 @@
 ####################################################################
 #                                                                  #
 #  dat2LaTeX:       a cloven script by Simone Capodicasa           # 
-#  homepage:        http://newton.ph.unito.it/~capodica            #
+#  homepage:        http://simonecapodicasa.github.io              #
 #  email:           capodica@studenti.ph.unito.it                  #
 #  latest update:   2014/03/11                                     #
 #                                                                  #
@@ -13,10 +13,15 @@
 
 SCRIPT=(basename $0)
 
+#############
+# Functions #
+#############
+
+# Help/Usage
 function Usage {
 echo -e "
 \033[1m\tdat2LaTeX:\ta cloven script by Simone Capodicasa\n
-\thomepage:\tsimonecapodicasa.github.io\n
+\thomepage:\thttp://simonecapodicasa.github.io\n
 \temail:\t\tcapodica@studenti.ph.unito.it\n
 \tlatest update:\t2014/03/11\n\n\033[0m
 \033[1mUSAGE:\033[0m\n
@@ -33,21 +38,32 @@ echo -e "
 exit 0
 }
 
-#stampo l'help se lo script è senza argomenti
-if [ $# -eq 0 ] 
-then
-    echo
-    Usage
-    exit 1
-fi
-#setto i default
+# Default settings
+function Setdef {
 COLS=0
 HSTYLE=0
 VSTYLE=''
 STANDALONE=0
 TITLE=''
 FLINE=""
-#leggo le opzioni e setto le variabili opportune
+}
+
+##########################
+# Qui comincia il lavoro #
+##########################
+
+# Stampo l'help se lo script è senza argomenti
+if [ $# -eq 0 ] 
+then
+    echo
+    Usage
+    exit 1
+fi
+
+# Default setting
+Setdef
+
+# Leggo le opzioni e setto le variabili opportune
 while getopts ":c:sv:aht:f:" OPT
 do
     case $OPT in
