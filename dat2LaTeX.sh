@@ -48,35 +48,8 @@ TITLE=''
 FLINE=""
 }
 
-##########################
-# Qui comincia il lavoro #
-##########################
-
-# Stampo l'help se lo script è senza argomenti
-if [ $# -eq 0 ] 
-then
-    echo
-    Usage
-    exit 1
-fi
-
-# Default setting
-Setdef
-
-# Leggo le opzioni e setto le variabili opportune
-while getopts ":c:sv:aht:f:" OPT
-do
-    case $OPT in
-	c ) COLS=$OPTARG;;
-	s ) HSTYLE=1;;
-	v ) VSTYLE=$OPTARG;;
-	a ) STANDALONE=1;;
-	t ) TITLE=$OPTARG;;
-	f ) FLINE=$OPTARG;;
-	h ) Usage; exit 0;;
-    esac
-done
-#setto lo stile verticale se l'utonto non lo ha fatto
+# Set vertical style if number of coloumns was specified
+function Setvertical {
 COUNTER=0
 if [ "$VSTYLE" = '' -a $COLS -ne 0 ]
 then
@@ -92,7 +65,24 @@ then
 	fi
     done
 fi
-#controllo se sono stati passati input ed output
+}
+
+# Ask for a number of coloumns and for the vertical style if not specified
+function Askcols {
+while [ $COLS -eq 0 ]
+do
+    echo 'You did not set any number of columns. Set a number before continuing.'
+    read COLS
+done
+while [ "$VSTYLE" = '' ]
+do
+    echo 'You did not set any vertical style. Set one style before continuing.'
+    read VSTYLE
+done
+}
+
+# Check input and output files
+function Checkfiles {
 shift $((OPTIND - 1))
 if [ "$1" = "" ]
 then
@@ -110,18 +100,7 @@ else
     NEWFILE=$2
 fi
 OUTFILE=$NEWFILE
-#controllo come sono state passate le opzioni
-while [ $COLS -eq 0 ]
-do
-    echo 'You did not set any number of columns. Set a number before continuing.'
-    read COLS
-done
-while [ "$VSTYLE" = '' ]
-do
-    echo 'You did not set any vertical style. Set one style before continuing.'
-    read VSTYLE
-done
-#controllo il file di input
+# Check input file
 ERR=1
 while [ $ERR -eq 1 ]
 do
@@ -140,7 +119,7 @@ do
 	INFILE=$NEWFILE
     fi
 done
-#controllo il file di output
+# Check output file
 ERR=1
 while [ $ERR -eq 1 ]
 do
@@ -169,7 +148,10 @@ do
 	ERR=0
     fi
 done
-#leggo il file di input e scrivo il file di output
+}
+
+# This function do the work
+function Dowork {
 if [ $STANDALONE -eq 1 ]
 then
     echo '\documentclass{article}' >> $OUTFILE
@@ -241,4 +223,41 @@ if [ $STANDALONE -eq 0 ]
 then
 echo -e 'Output written on '$OUTFILE'.\nEnjoy LaTeX!'
 fi
+}
+
+##########################
+# Qui comincia il lavoro #
+##########################
+
+# Print help if launched without any argument
+if [ $# -eq 0 ] 
+then
+    echo
+    Usage
+    exit 1
+fi
+# Set defaults
+Setdef
+# Read options
+while getopts ":c:sv:aht:f:" OPT
+do
+    case $OPT in
+	c ) COLS=$OPTARG;;
+	s ) HSTYLE=1;;
+	v ) VSTYLE=$OPTARG;;
+	a ) STANDALONE=1;;
+	t ) TITLE=$OPTARG;;
+	f ) FLINE=$OPTARG;;
+	h ) Usage; exit 0;;
+    esac
+done
+# Check in and out files
+Checkfiles
+# Set a standart vertical file if not specified
+Setvertical
+# Ask number of cols if not specified
+Askcols
+# do the work for create the tabular
+Dowork
+
 exit 0
