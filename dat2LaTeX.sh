@@ -57,7 +57,7 @@ do
 	a ) STANDALONE=1;;
 	t ) TITLE=$OPTARG;;
 	f ) FLINE=$OPTARG;;
-	h ) echo -e $HELP; exit 0;;
+	h ) Usage; exit 0;;
     esac
 done
 #setto lo stile verticale se l'utonto non lo ha fatto
